@@ -1,11 +1,11 @@
 ﻿using MediatR;
 using MeepleHub.Application.Queries.Games.GetGames;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
+using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
 
 namespace MeepleHub.Api.Controllers
 {
-    [Microsoft.AspNetCore.Components.Route("api/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
 
     public class GameController : ControllerBase
