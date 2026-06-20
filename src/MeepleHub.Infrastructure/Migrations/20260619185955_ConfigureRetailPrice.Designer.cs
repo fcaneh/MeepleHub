@@ -3,6 +3,7 @@ using MeepleHub.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MeepleHub.Infrastructure.Migrations
 {
     [DbContext(typeof(MeepleHubDbContext))]
-    partial class MeepleHubDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260619185955_ConfigureRetailPrice")]
+    partial class ConfigureRetailPrice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

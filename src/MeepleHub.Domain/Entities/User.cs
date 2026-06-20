@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MeepleHub.Domain.Entites
+namespace MeepleHub.Domain.Entities
 {
     public class User
     {

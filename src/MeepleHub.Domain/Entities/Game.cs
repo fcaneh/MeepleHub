@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using MeepleHub.Domain.Enums;
 
-namespace MeepleHub.Domain.Entites
+namespace MeepleHub.Domain.Entities
 {
     public class Game
     {

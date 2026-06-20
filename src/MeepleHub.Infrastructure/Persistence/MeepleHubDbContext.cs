@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using MeepleHub.Domain.Entites;
+using MeepleHub.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MeepleHub.Infrastructure.Persistence
@@ -15,8 +15,10 @@ namespace MeepleHub.Infrastructure.Persistence
         public DbSet<User> Users => Set<User>();
         public DbSet<Game> Games => Set<Game>();
         public DbSet<Publisher> Publishers => Set<Publisher>();
-        //protected MeepleHubDbContext()
-        //{
-        //}
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Game>().Property(game => game.RetailPrice).HasPrecision(10, 2);
+        }
     }
 }
