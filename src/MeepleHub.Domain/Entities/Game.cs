@@ -8,18 +8,32 @@ namespace MeepleHub.Domain.Entities
     public class Game
     {
         public int Id { get; set; }
+
         public string Name { get; set; } = string.Empty;
-        public decimal RetailPrice { get; set; }
-        public string? ImageUrl { get; set; }
-        public Publisher? Publisher { get; set; }
-        public int PublisherId { get; set; }
+
         public string? Description { get; set; }
+
+        public string? ImageUrl { get; set; }
+
         public int? PublishedYear { get; set; }
-        public int MinimumPlayers { get; set; }
-        public int MaximumPlayers { get; set; }
-        public Status Status { get; set; }
-        public Condition Condition { get; set; }
-        public int OwnerId { get; set; }
-        public User? Owner {  get; set; }
+
+        public int MinPlayers { get; set; }
+
+        public int MaxPlayers { get; set; }
+
+        public int MinPlayTime { get; set; }
+
+        public int MaxPlayTime { get; set; }
+
+        public int MinAge { get; set; }
+
+        public decimal Complexity { get; set; }
+
+        public decimal RetailPrice { get; set; }
+
+        public int PublisherId { get; set; }
+
+        public Publisher? Publisher { get; set; }
+        public List<UserGame>? UserGames { get; set; }
     }
 }

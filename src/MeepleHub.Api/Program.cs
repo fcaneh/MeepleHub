@@ -16,8 +16,8 @@ builder.Services.AddDbContext<MeepleHubDbContext>(options =>
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(GetGamesQuery).Assembly));
 
-// 3. AutoMapper (✅ Fonctionne avec AutoMapper 12.0.0)
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+// 3. AutoMapper 
+builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
 
 // 4. Repositories
 builder.Services.AddScoped<IGameRepository, GameRepository>();

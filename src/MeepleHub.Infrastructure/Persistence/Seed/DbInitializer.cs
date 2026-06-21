@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using MeepleHub.Domain.Entities;
-using MeepleHub.Domain.Enums;
 
 namespace MeepleHub.Infrastructure.Persistence.Seed
 {
@@ -44,24 +43,27 @@ namespace MeepleHub.Infrastructure.Persistence.Seed
                 {
                     Name = "7 Wonders",
                     RetailPrice = 39.99m,
-                    MinimumPlayers = 2,
-                    MaximumPlayers = 7,
-                    Status = Status.Owned,
-                    Condition = Condition.VeryGood,
-                    OwnerId = fabien.Id,
+                    MinPlayers = 2,
+                    MaxPlayers = 7,
+                    MinPlayTime = 30,
+                    MaxPlayTime = 60,
+                    MinAge = 10,
+                    Complexity = 2.3m,
                     PublisherId = reposProduction.Id
                 },
                 new Game
                 {
                     Name = "Zombicide",
                     RetailPrice = 99.99m,
-                    MinimumPlayers = 1,
-                    MaximumPlayers = 6,
-                    Status = Status.ForTrade,
-                    Condition = Condition.Good,
-                    OwnerId = alice.Id,
+                    MinPlayers = 1,
+                    MaxPlayers = 6,
+                    MinPlayTime = 60,
+                    MaxPlayTime = 180,
+                    MinAge = 14,
+                    Complexity = 2.8m,
                     PublisherId = cmon.Id
                 });
+
             meepleHubDbContext.SaveChanges();
         }
     }

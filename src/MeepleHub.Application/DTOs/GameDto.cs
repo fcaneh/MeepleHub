@@ -13,9 +13,10 @@ public class GameDto
     public int PublisherId { get; set; }
     public string? Description { get; set; }
     public int? PublishedYear { get; set; }
-    public int MinimumPlayers { get; set; }
-    public int MaximumPlayers { get; set; }
-    public int Status { get; set; }
-    public int Condition { get; set; }
-    public int OwnerId { get; set; }
+    public int MinPlayers { get; set; }
+    public int MaxPlayers { get; set; }
+    public int MinPlayTime { get; set; }
+    public int MaxPlayTime { get; set; }
+    public int MinAge { get; set; }
+    public decimal Complexity { get; set; }
 }
