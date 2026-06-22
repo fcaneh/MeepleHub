@@ -1,5 +1,6 @@
 using MeepleHub.Application;
 using MeepleHub.Application.Queries.Games.GetGames;
+using MeepleHub.Application.Queries.Games.Users.GetUsers;
 using MeepleHub.Domain.Interfaces;
 using MeepleHub.Infrastructure.Persistence;
 using MeepleHub.Infrastructure.Persistence.Seed;
@@ -13,14 +14,15 @@ builder.Services.AddDbContext<MeepleHubDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // 2. MediatR
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(GetGamesQuery).Assembly));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetGamesQuery).Assembly));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetUsersQuery).Assembly));
 
 // 3. AutoMapper 
 builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
 
 // 4. Repositories
 builder.Services.AddScoped<IGameRepository, GameRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // 5. Swagger
 builder.Services.AddEndpointsApiExplorer();

@@ -35,9 +35,7 @@ namespace MeepleHub.Infrastructure.Repositories
         public async Task<bool> ExistsByNameAsync(string name, int excludedGameId)
         {
             var normalizedName = name.Trim().ToLower();
-            return await _context.Games.AnyAsync(game =>
-                game.Id != excludedGameId &&
-                game.Name.ToLower() == normalizedName);
+            return await _context.Games.AnyAsync(game => game.Id != excludedGameId && game.Name.ToLower() == normalizedName);
         }
 
         public async Task<IEnumerable<Game>> GetAllAsync()
