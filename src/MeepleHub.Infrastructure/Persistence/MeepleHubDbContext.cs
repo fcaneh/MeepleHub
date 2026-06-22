@@ -24,15 +24,12 @@ namespace MeepleHub.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Game>().Property(game => game.RetailPrice).HasPrecision(10, 2);
-            modelBuilder.Entity<UserGame>().HasOne(ug => ug.User).WithMany(u => u.UserGames).HasForeignKey(ug => ug.UserId);
-
-            modelBuilder.Entity<UserGame>().HasOne(ug => ug.Game).WithMany(g => g.UserGames).HasForeignKey(ug => ug.GameId);
-
-            modelBuilder.Entity<UserGame>().Property(ug => ug.PurchasePrice).HasPrecision(10, 2);
-
-            modelBuilder.Entity<UserGame>().Property(ug => ug.SellingPrice).HasPrecision(10, 2);
-
+            modelBuilder.Entity<Game>().HasIndex(game => game.Name).IsUnique();
             modelBuilder.Entity<Game>().Property(game => game.Complexity).HasPrecision(3, 2);
+            modelBuilder.Entity<UserGame>().HasOne(ug => ug.User).WithMany(u => u.UserGames).HasForeignKey(ug => ug.UserId);
+            modelBuilder.Entity<UserGame>().HasOne(ug => ug.Game).WithMany(g => g.UserGames).HasForeignKey(ug => ug.GameId);
+            modelBuilder.Entity<UserGame>().Property(ug => ug.PurchasePrice).HasPrecision(10, 2);
+            modelBuilder.Entity<UserGame>().Property(ug => ug.SellingPrice).HasPrecision(10, 2);
         }
     }
 }

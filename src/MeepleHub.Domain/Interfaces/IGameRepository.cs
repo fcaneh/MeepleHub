@@ -10,5 +10,10 @@ namespace MeepleHub.Domain.Interfaces
     {
         Task<IEnumerable<Game>> GetAllAsync();
         Task<Game?> GetByIdAsync(int id);
+        Task AddAsync(Game game);
+        Task SaveChangesAsync();
+        Task<bool> ExistsByNameAsync(string name);
+        Task<bool> ExistsByNameAsync(string name, int excludedGameId);
+        void Delete(Game game);
     }
 }
