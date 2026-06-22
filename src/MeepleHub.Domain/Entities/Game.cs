@@ -35,5 +35,7 @@ namespace MeepleHub.Domain.Entities
 
         public Publisher? Publisher { get; set; }
         public List<UserGame>? UserGames { get; set; }
+        public List<GameAlias>? Aliases { get; set; }
+        public List<GameExternalReference>? ExternalReferences { get; set; }
     }
 }
