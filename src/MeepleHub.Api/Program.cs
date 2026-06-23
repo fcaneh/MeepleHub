@@ -1,6 +1,6 @@
 using MeepleHub.Application;
 using MeepleHub.Application.Queries.Games.GetGames;
-using MeepleHub.Application.Queries.Games.Users.GetUsers;
+using MeepleHub.Application.Queries.Users.GetUsers;
 using MeepleHub.Domain.Interfaces;
 using MeepleHub.Infrastructure.Persistence;
 using MeepleHub.Infrastructure.Persistence.Seed;
