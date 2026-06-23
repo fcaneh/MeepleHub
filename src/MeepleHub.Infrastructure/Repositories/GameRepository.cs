@@ -16,6 +16,28 @@ namespace MeepleHub.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task AddAsync(Game game)
+        {
+            await _context.Games.AddAsync(game);
+        }
+
+        public void Delete(Game game)
+        {
+            _context.Games.Remove(game);
+        }
+
+        public async Task<bool> ExistsByNameAsync(string name)
+        {
+            var normalizedName = name.Trim().ToLower();
+            return await _context.Games.AnyAsync(game => game.Name.ToLower() == normalizedName);
+        }
+
+        public async Task<bool> ExistsByNameAsync(string name, int excludedGameId)
+        {
+            var normalizedName = name.Trim().ToLower();
+            return await _context.Games.AnyAsync(game => game.Id != excludedGameId && game.Name.ToLower() == normalizedName);
+        }
+
         public async Task<IEnumerable<Game>> GetAllAsync()
         {
             return await _context.Games.ToListAsync();
@@ -24,6 +46,11 @@ namespace MeepleHub.Infrastructure.Repositories
         public async Task<Game?> GetByIdAsync(int id)
         {
             return await _context.Games.FindAsync(id);
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }

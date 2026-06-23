@@ -12,6 +12,8 @@ namespace MeepleHub.Application
         public MappingProfile() 
         {
             CreateMap<Game, GameDto>().ReverseMap();
+            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<UserGame, UserGameDto>().ReverseMap();
         }
     }
 }

@@ -3,6 +3,7 @@ using MeepleHub.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MeepleHub.Infrastructure.Migrations
 {
     [DbContext(typeof(MeepleHubDbContext))]
-    partial class MeepleHubDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260621170931_AddUniqueIndexOnGameName")]
+    partial class AddUniqueIndexOnGameName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -129,64 +132,6 @@ namespace MeepleHub.Infrastructure.Migrations
                     b.ToTable("Games");
                 });
 
-            modelBuilder.Entity("MeepleHub.Domain.Entities.GameAlias", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LanguageCode")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GameId");
-
-                    b.ToTable("GameAliases");
-                });
-
-            modelBuilder.Entity("MeepleHub.Domain.Entities.GameExternalReference", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ExternalId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Source")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GameId");
-
-                    b.HasIndex("Source", "ExternalId")
-                        .IsUnique();
-
-                    b.ToTable("GameExternalReferences");
-                });
-
             modelBuilder.Entity("MeepleHub.Domain.Entities.Mechanic", b =>
                 {
                     b.Property<int>("Id")
@@ -296,28 +241,6 @@ namespace MeepleHub.Infrastructure.Migrations
                     b.Navigation("Publisher");
                 });
 
-            modelBuilder.Entity("MeepleHub.Domain.Entities.GameAlias", b =>
-                {
-                    b.HasOne("MeepleHub.Domain.Entities.Game", "Game")
-                        .WithMany("Aliases")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Game");
-                });
-
-            modelBuilder.Entity("MeepleHub.Domain.Entities.GameExternalReference", b =>
-                {
-                    b.HasOne("MeepleHub.Domain.Entities.Game", "Game")
-                        .WithMany("ExternalReferences")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Game");
-                });
-
             modelBuilder.Entity("MeepleHub.Domain.Entities.UserGame", b =>
                 {
                     b.HasOne("MeepleHub.Domain.Entities.Game", "Game")
@@ -339,10 +262,6 @@ namespace MeepleHub.Infrastructure.Migrations
 
             modelBuilder.Entity("MeepleHub.Domain.Entities.Game", b =>
                 {
-                    b.Navigation("Aliases");
-
-                    b.Navigation("ExternalReferences");
-
                     b.Navigation("UserGames");
                 });
 
