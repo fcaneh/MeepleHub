@@ -1,14 +1,14 @@
 ﻿using MediatR;
-using MeepleHub.Application.Commands.Users.CreateUserCommand;
-using MeepleHub.Application.Commands.Users.DeleteUserCommand;
-using MeepleHub.Application.Commands.Users.UpdateUserCommand;
-using MeepleHub.Application.Queries.Games.Users.GetUserById;
-using MeepleHub.Application.Queries.Games.Users.GetUsers;
+using MeepleHub.Application.Commands.Users.CreateUser;
+using MeepleHub.Application.Commands.Users.DeleteUser;
+using MeepleHub.Application.Commands.Users.UpdateUser;
+using MeepleHub.Application.Queries.Users.GetUserById;
+using MeepleHub.Application.Queries.Users.GetUsers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeepleHub.Api.Controllers
 {
-    [Microsoft.AspNetCore.Mvc.Route("api/users")]
+    [Route("api/users")]
     [ApiController]
     public class UserController : ControllerBase
     {

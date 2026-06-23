@@ -13,6 +13,7 @@ namespace MeepleHub.Application
         {
             CreateMap<Game, GameDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<UserGame, UserGameDto>().ReverseMap();
         }
     }
 }

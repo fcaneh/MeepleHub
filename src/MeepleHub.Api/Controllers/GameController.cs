@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using MeepleHub.Application.Commands.Games.CreateGameCommand;
-using MeepleHub.Application.Commands.Games.DeleteGameCommand;
-using MeepleHub.Application.Commands.Games.UpdateGameCommand;
+using MeepleHub.Application.Commands.Games.CreateGame;
+using MeepleHub.Application.Commands.Games.DeleteGame;
+using MeepleHub.Application.Commands.Games.UpdateGame;
 using MeepleHub.Application.Queries.Games.GetGameById;
 using MeepleHub.Application.Queries.Games.GetGames;
 using Microsoft.AspNetCore.Mvc;
