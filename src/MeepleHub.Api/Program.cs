@@ -1,7 +1,9 @@
 using MeepleHub.Application;
+using MeepleHub.Application.ExternalInterfaces;
 using MeepleHub.Application.Queries.Games.GetGames;
 using MeepleHub.Application.Queries.Users.GetUsers;
 using MeepleHub.Domain.Interfaces;
+using MeepleHub.Infrastructure.ExternalRepositories;
 using MeepleHub.Infrastructure.Persistence;
 using MeepleHub.Infrastructure.Persistence.Seed;
 using MeepleHub.Infrastructure.Repositories;
@@ -34,6 +36,12 @@ builder.Services.AddSwaggerGen(c =>
 
 // 6. Contrôleurs
 builder.Services.AddControllers();
+
+// 7.Services
+builder.Services.AddHttpClient<IBggClient, BggClient>(client =>
+{
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("MeepleHub/0.1");
+});
 
 var app = builder.Build();
 
