@@ -8,5 +8,6 @@ namespace MeepleHub.Application.Commands.UserGames.DeleteUserGame
     public class DeleteUserGameCommand : IRequest<DeleteUserGameResponse>
     {
         public int Id { get; set; }
+        public int UserId { get; set; }
     }
 }

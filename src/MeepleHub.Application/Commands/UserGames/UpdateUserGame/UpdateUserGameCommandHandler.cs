@@ -28,6 +28,11 @@ namespace MeepleHub.Application.Commands.UserGames.UpdateUserGame
                 return new UpdateUserGameResponse { Updated = false};
             }
 
+            if (userGame.UserId != request.UserId) 
+            { 
+                return new UpdateUserGameResponse { Updated = false }; 
+            }
+
             userGame.Status = request.Status;
             userGame.Condition = request.Condition;
             userGame.PersonalRating = request.PersonalRating;

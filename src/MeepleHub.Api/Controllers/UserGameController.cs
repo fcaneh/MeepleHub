@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MeepleHub.Api.Controllers
 {
-    [Route("api/usergames")]
+    [Route("api/users/{userId:int}/games")]
     [ApiController]
     public class UserGameController : ControllerBase
     {
@@ -30,8 +30,8 @@ namespace MeepleHub.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<GetUserGameByIdResponse>> GetUserGameById(int userGameId)
+        [HttpGet("{userGameId:int}")]
+        public async Task<ActionResult<GetUserGameByIdResponse>> GetUserGameById(int userId, int userGameId)
         {
             var query = new GetUserGameByIdQuery { UserGameId = userGameId };
             var result = await _mediator.Send(query);
@@ -41,10 +41,11 @@ namespace MeepleHub.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult<UpdateUserGameResponse>> UpdateUserGame(int id, UpdateUserGameCommand command)
+        [HttpPut("{userGameId:int}")]
+        public async Task<ActionResult<UpdateUserGameResponse>> UpdateUserGame(int userId, int userGameId, UpdateUserGameCommand command)
         {
-            command.Id = id;
+            command.Id = userGameId;
+            command.UserId = userId;
             var result = await _mediator.Send(command);
 
             if(!result.Updated) return NotFound();
@@ -52,19 +53,20 @@ namespace MeepleHub.Api.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteUserGame(int id)
+        [HttpDelete("{userGameId:int}")]
+        public async Task<IActionResult> DeleteUserGame(int userId, int userGameId)
         {
-            var result = await _mediator.Send(new DeleteUserGameCommand { Id = id });
+            var result = await _mediator.Send(new DeleteUserGameCommand { Id = userGameId, UserId = userId });
             if (!result.Deleted) return NotFound(); 
             return NoContent();
         }
 
         [HttpPost]
-        public async Task<ActionResult<CreateUserGameResponse>> CreateUserGame(CreateUserGameCommand command)
+        public async Task<ActionResult<CreateUserGameResponse>> CreateUserGame(int userId, CreateUserGameCommand command)
         {
+            command.UserId = userId;
             var result = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetUserGameById), new { id = result.UserGame.Id }, result);
+            return CreatedAtAction(nameof(GetUserGameById), new { userId = userId, userGameId = result.UserGame.Id }, result);
         }
     }
 }
