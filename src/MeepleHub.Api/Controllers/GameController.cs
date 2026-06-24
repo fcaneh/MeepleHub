@@ -2,6 +2,7 @@
 using MeepleHub.Application.Commands.Games.CreateGame;
 using MeepleHub.Application.Commands.Games.DeleteGame;
 using MeepleHub.Application.Commands.Games.UpdateGame;
+using MeepleHub.Application.Queries.Games.GameSearch;
 using MeepleHub.Application.Queries.Games.GetGameById;
 using MeepleHub.Application.Queries.Games.GetGames;
 using Microsoft.AspNetCore.Mvc;
@@ -65,6 +66,15 @@ namespace MeepleHub.Api.Controllers
             if (result.NameAlreadyExists) return Conflict(result);
 
             if(!result.Updated) return NotFound();
+
+            return Ok(result);
+        }
+
+        [HttpGet("search")]
+        public async Task<ActionResult<GameSearchResponse>> SearchGame([FromQuery] string query)
+        {
+            var searchQuery = new GameSearchQuery { Query = query};
+            var result = await _mediator.Send(searchQuery);
 
             return Ok(result);
         }

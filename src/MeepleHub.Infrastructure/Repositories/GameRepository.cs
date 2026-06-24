@@ -52,5 +52,16 @@ namespace MeepleHub.Infrastructure.Repositories
         {
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<Game>> SearchAsync(string query)
+        {
+            var normalizedQuery = query.Trim().ToLower();
+
+            return await _context.Games.Where(game => 
+                game.Name.ToLower().Contains(normalizedQuery) || 
+                game.Aliases != null 
+                    && game.Aliases.Any(alias => alias.Name.ToLower().Contains(normalizedQuery)))
+                .ToListAsync();
+        }
     }
 }
