@@ -15,5 +15,6 @@ namespace MeepleHub.Domain.Interfaces
         Task<bool> ExistsByNameAsync(string name);
         Task<bool> ExistsByNameAsync(string name, int excludedGameId);
         void Delete(Game game);
+        Task<IEnumerable<Game>> SearchAsync(string query);
     }
 }
