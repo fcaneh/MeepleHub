@@ -8,6 +8,7 @@ namespace MeepleHub.Application.Commands.UserGames.UpdateUserGame
 {
     public class UpdateUserGameCommand :IRequest<UpdateUserGameResponse>
     {
+        public int UserId { get; set; }
         public int Id { get; set; }
         public Status Status { get; set; }
         public Condition Condition { get; set; }
