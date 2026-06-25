@@ -44,7 +44,7 @@ namespace MeepleHub.Api.Controllers
         public async Task<ActionResult<CreateGameResponse>> CreateGame(CreateGameCommand command)
         {
             var result = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetGameById), new {id = result.Game.Id}, result);
+            return CreatedAtAction(nameof(GetGameById), new { id = result.Game.Id }, result);
         }
 
         [HttpDelete("{id:int}")]

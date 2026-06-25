@@ -1,4 +1,9 @@
+using FluentValidation;
+using MediatR;
+using MeepleHub.Api.MiddleWare;
 using MeepleHub.Application;
+using MeepleHub.Application.Commands.Games.CreateGame;
+using MeepleHub.Application.Common.Behaviors;
 using MeepleHub.Application.Queries.Games.GetGames;
 using MeepleHub.Application.Queries.Users.GetUsers;
 using MeepleHub.Domain.Interfaces;
@@ -35,7 +40,12 @@ builder.Services.AddSwaggerGen(c =>
 // 6. Contrôleurs
 builder.Services.AddControllers();
 
+// 7. Services
+builder.Services.AddValidatorsFromAssemblyContaining<CreateGameCommandValidator>();
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
 var app = builder.Build();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Seed la base
 using (var scope = app.Services.CreateScope())
