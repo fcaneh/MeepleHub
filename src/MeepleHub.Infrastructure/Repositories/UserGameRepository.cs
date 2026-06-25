@@ -32,9 +32,10 @@ namespace MeepleHub.Infrastructure.Repositories
             return await _context.UserGames.Where(ug => ug.UserId == userId).ToListAsync();
         }
 
-        public async Task<UserGame?> GetByIdAsync(int userGameId)
+        public async Task<UserGame?> GetByIdAsync(int userId, int userGameId)
         {
-            return await _context.UserGames.FindAsync(userGameId);
+            return await _context.UserGames
+                .FirstOrDefaultAsync(ug => ug.Id == userGameId && ug.UserId == userId);
         }
 
         public async Task SaveChangesAsync()

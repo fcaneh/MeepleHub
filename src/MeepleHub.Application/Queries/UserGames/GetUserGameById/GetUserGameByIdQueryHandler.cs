@@ -21,7 +21,7 @@ namespace MeepleHub.Application.Queries.UserGames.GetUserGameById
 
         public async Task<GetUserGameByIdResponse> Handle(GetUserGameByIdQuery request, CancellationToken cancellationToken)
         {
-            var userGame = await _userGameRepository.GetByIdAsync(request.UserGameId);
+            var userGame = await _userGameRepository.GetByIdAsync(request.UserId, request.UserGameId);
             return new GetUserGameByIdResponse
             {
                 UserGame = _mapper.Map<UserGameDto>(userGame)

@@ -33,7 +33,7 @@ namespace MeepleHub.Api.Controllers
         [HttpGet("{userGameId:int}")]
         public async Task<ActionResult<GetUserGameByIdResponse>> GetUserGameById(int userId, int userGameId)
         {
-            var query = new GetUserGameByIdQuery { UserGameId = userGameId };
+            var query = new GetUserGameByIdQuery { UserId = userId, UserGameId = userGameId };
             var result = await _mediator.Send(query);
 
             if (result.UserGame is null) return NotFound(); 
