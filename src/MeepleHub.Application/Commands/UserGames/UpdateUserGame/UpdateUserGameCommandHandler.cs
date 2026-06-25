@@ -21,16 +21,11 @@ namespace MeepleHub.Application.Commands.UserGames.UpdateUserGame
 
         public async Task<UpdateUserGameResponse> Handle(UpdateUserGameCommand request, CancellationToken cancellationToken)
         {
-            var userGame = await _userGameRepository.GetByIdAsync(request.Id);
+            var userGame = await _userGameRepository.GetByIdAsync(request.UserId, request.Id);
 
             if (userGame is null)
             {
                 return new UpdateUserGameResponse { Updated = false};
-            }
-
-            if (userGame.UserId != request.UserId) 
-            { 
-                return new UpdateUserGameResponse { Updated = false }; 
             }
 
             userGame.Status = request.Status;
