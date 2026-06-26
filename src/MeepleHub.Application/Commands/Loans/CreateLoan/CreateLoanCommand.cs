@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MediatR;
 
-namespace MeepleHub.Domain.Entities
+namespace MeepleHub.Application.Commands.Loans.CreateLoan
 {
-    public class Loan
+    public class CreateLoanCommand :IRequest<CreateLoanResponse>
     {
-        public int Id { get; set; }
+        public int UserId { get; set; }
         public int UserGameId { get; set; }
-        public UserGame? UserGame { get; set; }
         public int BorrowerUserId { get; set; }
-        public User? BorrowerUser { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime? ExpectedReturnDate { get; set; }
-        public DateTime? ReturnedAt { get; set; }
         public string? Notes { get; set; }
     }
 }

@@ -29,6 +29,7 @@ builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
 builder.Services.AddScoped<IGameRepository, GameRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserGameRepository, UserGameRepository>();
+builder.Services.AddScoped<ILoanRepository, LoanRepository>();
 
 // 5. Swagger
 builder.Services.AddEndpointsApiExplorer();
