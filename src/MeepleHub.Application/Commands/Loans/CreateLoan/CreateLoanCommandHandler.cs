@@ -12,16 +12,25 @@ namespace MeepleHub.Application.Commands.Loans.CreateLoan
     public class CreateLoanCommandHandler : IRequestHandler<CreateLoanCommand, CreateLoanResponse>
     {
         private readonly ILoanRepository _loanRepository;
+        private readonly IUserGameRepository _userGameRepository;
         private readonly IMapper _mapper;
 
-        public CreateLoanCommandHandler(ILoanRepository loanRepository, IMapper mapper)
+        public CreateLoanCommandHandler(ILoanRepository loanRepository, IUserGameRepository userGameRepository, IMapper mapper)
         {
             _loanRepository = loanRepository;
+            _userGameRepository = userGameRepository;
             _mapper = mapper;
         }
 
         public async Task<CreateLoanResponse> Handle(CreateLoanCommand request, CancellationToken cancellationToken)
         {
+            var userGameBelongsToUser = await _userGameRepository.ExistsForUserAsync(request.UserId, request.UserGameId);
+
+            if (!userGameBelongsToUser)
+            {
+                throw new InvalidOperationException("This user game does not belong to this user");
+            }
+
             var hasActiveLoan = await _loanRepository.HasActiveLoanForUserGameAsync(request.UserGameId);
 
             if (hasActiveLoan)

@@ -12,5 +12,6 @@ namespace MeepleHub.Domain.Interfaces
         Task AddAsync(UserGame userGame);
         Task SaveChangesAsync();
         void Delete(UserGame userGame);
+        Task<bool> ExistsForUserAsync(int userId, int userGameId);
     }
 }

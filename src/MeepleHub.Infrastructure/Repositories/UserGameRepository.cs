@@ -42,5 +42,11 @@ namespace MeepleHub.Infrastructure.Repositories
         {
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> ExistsForUserAsync(int userId, int userGameId)
+        {
+            return await _context.UserGames
+                .AnyAsync(userGame => userGame.Id == userGameId && userGame.UserId == userId);
+        }
     }
 }
