@@ -18,5 +18,6 @@ namespace MeepleHub.Domain.Entities
         public string? Notes { get; set; }
         public User? User { get; set; }
         public Game? Game { get; set; }
+        public ICollection<Loan> Loans { get; set; } = new List<Loan>();
     }
 }
