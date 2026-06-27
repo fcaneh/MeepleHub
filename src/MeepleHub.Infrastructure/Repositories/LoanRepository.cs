@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using MeepleHub.Domain.Entities;
+using MeepleHub.Domain.Enums;
 using MeepleHub.Domain.Interfaces;
 using MeepleHub.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ namespace MeepleHub.Infrastructure.Repositories
 
         public async Task<bool> HasActiveLoanForUserGameAsync(int userGameId)
         {
-            return await _context.Loans.AnyAsync(loan => loan.UserGameId == userGameId && loan.StartDate <= DateTime.UtcNow && loan.ReturnedAt == null);
+            return await _context.Loans.AnyAsync(loan => loan.UserGameId == userGameId && loan.Status == LoanStatus.Accepted && loan.ReturnedAt == null);
         }
 
         public async Task<Loan?> GetLoanInvolvingUserAsync(int userId, int loanId)
