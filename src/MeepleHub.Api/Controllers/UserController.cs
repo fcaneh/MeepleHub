@@ -4,6 +4,7 @@ using MeepleHub.Application.Commands.Users.DeleteUser;
 using MeepleHub.Application.Commands.Users.UpdateUser;
 using MeepleHub.Application.Queries.Users.GetUserById;
 using MeepleHub.Application.Queries.Users.GetUsers;
+using MeepleHub.Api.Requests.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeepleHub.Api.Controllers
@@ -27,7 +28,7 @@ namespace MeepleHub.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<GetUserByIdResponse>> GetUserById(int id)
+        public async Task<ActionResult<GetUserByIdResponse>> GetUserById([FromRoute] int id)
         {
             var query = new GetUserByIdQuery { Id = id };
             var result = await _mediator.Send(query);
@@ -38,16 +39,28 @@ namespace MeepleHub.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CreateUserResponse>> CreateUser(CreateUserCommand command)
+        public async Task<ActionResult<CreateUserResponse>> CreateUser([FromBody] CreateUserRequest request)
         {
+            var command = new CreateUserCommand
+            {
+                Name = request.Name,
+                Email = request.Email
+            };
+
             var result = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetUserById), new { id = result.User.Id }, result);
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<UpdateUserResponse>> UpdateUser(int id, UpdateUserCommand command)
+        public async Task<ActionResult<UpdateUserResponse>> UpdateUser([FromRoute] int id, [FromBody] UpdateUserRequest request)
         {
-            command.Id = id;
+            var command = new UpdateUserCommand
+            {
+                Id = id,
+                Name = request.Name,
+                Email = request.Email
+            };
+
             var result = await _mediator.Send(command);
 
             if (result.EmailAlreadyExists) return Conflict(result);
@@ -57,7 +70,7 @@ namespace MeepleHub.Api.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteUser(int id) 
+        public async Task<IActionResult> DeleteUser([FromRoute] int id) 
         {
             var result = await _mediator.Send(new DeleteUserCommand { Id = id });
             if(!result.Deleted) return NotFound();

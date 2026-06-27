@@ -7,6 +7,7 @@ using MeepleHub.Application.Commands.Loans.ReturnLoan;
 using MeepleHub.Application.Queries.Loans.GetUserGameLoans;
 using MeepleHub.Application.Queries.Loans.GetUserLoans;
 using Microsoft.AspNetCore.Mvc;
+using MeepleHub.Api.Requests.Loans;
 
 namespace MeepleHub.Api.Controllers
 {
@@ -44,10 +45,16 @@ namespace MeepleHub.Api.Controllers
         }
 
         [HttpPost("games/{userGameId:int}/loans")]
-        public async Task<ActionResult<CreateLoanResponse>> CreateLoan(int userId, int userGameId, CreateLoanCommand command)
+        public async Task<ActionResult<CreateLoanResponse>> CreateLoan([FromRoute] int userId, [FromRoute] int userGameId, [FromBody] CreateLoanRequest request)
         {
-            command.UserId = userId;
-            command.UserGameId = userGameId;
+            var command = new CreateLoanCommand
+            {
+                UserId = userId,
+                UserGameId = userGameId,
+                BorrowerUserId = request.BorrowerUserId,
+                ExpectedReturnDate = request.ExpectedReturnDate,
+                Notes = request.Notes
+            };
 
             var result = await _mediator.Send(command);
 
@@ -55,10 +62,15 @@ namespace MeepleHub.Api.Controllers
         }
 
         [HttpPut("loans/{loanId:int}/accept")]
-        public async Task<ActionResult<AcceptLoanResponse>> AcceptLoan(int userId, int loanId, AcceptLoanCommand command)
+        public async Task<ActionResult<AcceptLoanResponse>> AcceptLoan([FromRoute] int userId, [FromRoute] int loanId, [FromBody] AcceptLoanRequest request)
         {
-            command.UserId = userId;
-            command.LoanId = loanId;
+            var command = new AcceptLoanCommand
+            {
+                UserId = userId,
+                LoanId = loanId,
+                StartDate = request.StartDate,
+                ExpectedReturnDate = request.ExpectedReturnDate
+            };
 
             var result = await _mediator.Send(command);
 
@@ -68,10 +80,14 @@ namespace MeepleHub.Api.Controllers
         }
 
         [HttpPut("loans/{loanId:int}/decline")]
-        public async Task<ActionResult<DeclineLoanResponse>> DeclineLoan(int userId, int loanId, DeclineLoanCommand command)
+        public async Task<ActionResult<DeclineLoanResponse>> DeclineLoan([FromRoute] int userId, [FromRoute] int loanId)
         {
-            command.UserId = userId;
-            command.LoanId = loanId;
+            var command = new DeclineLoanCommand
+            {
+                UserId = userId,
+                LoanId = loanId
+            };
+            
 
             var result = await _mediator.Send(command);
 
@@ -81,10 +97,13 @@ namespace MeepleHub.Api.Controllers
         }
 
         [HttpPut("loans/{loanId:int}/cancel")]
-        public async Task<ActionResult<CancelLoanResponse>> CancelLoan(int userId, int loanId, CancelLoanCommand command)
+        public async Task<ActionResult<CancelLoanResponse>> CancelLoan([FromRoute] int userId, [FromRoute] int loanId)
         {
-            command.BorrowerId = userId;
-            command.LoanId = loanId;
+            var command = new CancelLoanCommand
+            {
+                BorrowerId = userId,
+                LoanId = loanId
+            };
 
             var result = await _mediator.Send(command);
 
@@ -94,10 +113,14 @@ namespace MeepleHub.Api.Controllers
         }
 
         [HttpPut("loans/{loanId:int}/return")]
-        public async Task<ActionResult<ReturnLoanResponse>> ReturnLoan(int userId, int loanId, ReturnLoanCommand command)
+        public async Task<ActionResult<ReturnLoanResponse>> ReturnLoan([FromRoute] int userId, [FromRoute] int loanId, [FromBody] ReturnLoanRequest request)
         {
-            command.UserId = userId;
-            command.LoanId = loanId;
+            var command = new ReturnLoanCommand
+            {
+                UserId = userId,
+                LoanId = loanId,
+                Notes = request.Notes
+            };
 
             var result = await _mediator.Send(command);
 
