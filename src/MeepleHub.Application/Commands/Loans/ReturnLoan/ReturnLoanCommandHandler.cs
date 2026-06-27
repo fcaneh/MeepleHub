@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MediatR;
+﻿using MediatR;
+using MeepleHub.Domain.Enums;
 using MeepleHub.Domain.Interfaces;
 
 namespace MeepleHub.Application.Commands.Loans.ReturnLoan
@@ -29,6 +27,12 @@ namespace MeepleHub.Application.Commands.Loans.ReturnLoan
                 return new ReturnLoanResponse { Returned = false };
             }
 
+            if (loan.Status != LoanStatus.Accepted)
+            {
+                return new ReturnLoanResponse { Returned = false };
+            }
+
+            loan.Status = LoanStatus.Returned;
             loan.ReturnedAt = DateTime.UtcNow;
             if (request.Notes is not null)
             {
