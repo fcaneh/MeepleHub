@@ -7,6 +7,7 @@ using MeepleHub.Application.Commands.Loans.ReturnLoan;
 using MeepleHub.Application.Queries.Loans.GetUserGameLoans;
 using MeepleHub.Application.Queries.Loans.GetUserLoans;
 using Microsoft.AspNetCore.Mvc;
+using MeepleHub.Api.Requests.Loans;
 
 namespace MeepleHub.Api.Controllers
 {
@@ -44,10 +45,16 @@ namespace MeepleHub.Api.Controllers
         }
 
         [HttpPost("games/{userGameId:int}/loans")]
-        public async Task<ActionResult<CreateLoanResponse>> CreateLoan(int userId, int userGameId, CreateLoanCommand command)
+        public async Task<ActionResult<CreateLoanResponse>> CreateLoan([FromRoute] int userId, [FromRoute] int userGameId, [FromBody] CreateLoanRequest request)
         {
-            command.UserId = userId;
-            command.UserGameId = userGameId;
+            var command = new CreateLoanCommand
+            {
+                UserId = userId,
+                UserGameId = userGameId,
+                BorrowerUserId = request.BorrowerUserId,
+                ExpectedReturnDate = request.ExpectedReturnDate,
+                Notes = request.Notes
+            };
 
             var result = await _mediator.Send(command);
 
