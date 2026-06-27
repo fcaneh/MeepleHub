@@ -106,10 +106,14 @@ namespace MeepleHub.Api.Controllers
         }
 
         [HttpPut("loans/{loanId:int}/return")]
-        public async Task<ActionResult<ReturnLoanResponse>> ReturnLoan(int userId, int loanId, ReturnLoanCommand command)
+        public async Task<ActionResult<ReturnLoanResponse>> ReturnLoan([FromRoute] int userId, [FromRoute] int loanId, [FromBody] ReturnLoanRequest request)
         {
-            command.UserId = userId;
-            command.LoanId = loanId;
+            var command = new ReturnLoanCommand
+            {
+                UserId = userId,
+                LoanId = loanId,
+                Notes = request.Notes
+            };
 
             var result = await _mediator.Send(command);
 
