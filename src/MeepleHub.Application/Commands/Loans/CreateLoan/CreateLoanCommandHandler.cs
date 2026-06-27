@@ -5,6 +5,7 @@ using AutoMapper;
 using MediatR;
 using MeepleHub.Application.DTOs;
 using MeepleHub.Domain.Entities;
+using MeepleHub.Domain.Enums;
 using MeepleHub.Domain.Interfaces;
 
 namespace MeepleHub.Application.Commands.Loans.CreateLoan
@@ -42,7 +43,9 @@ namespace MeepleHub.Application.Commands.Loans.CreateLoan
             {
                 UserGameId = request.UserGameId,
                 BorrowerUserId = request.BorrowerUserId,
-                StartDate = request.StartDate,
+                StartDate = null,
+                Status = LoanStatus.Pending,
+                RequestDate = DateTime.UtcNow,
                 ExpectedReturnDate = request.ExpectedReturnDate,
                 Notes = request.Notes,
             };
