@@ -80,10 +80,14 @@ namespace MeepleHub.Api.Controllers
         }
 
         [HttpPut("loans/{loanId:int}/decline")]
-        public async Task<ActionResult<DeclineLoanResponse>> DeclineLoan(int userId, int loanId, DeclineLoanCommand command)
+        public async Task<ActionResult<DeclineLoanResponse>> DeclineLoan([FromRoute] int userId, [FromRoute] int loanId)
         {
-            command.UserId = userId;
-            command.LoanId = loanId;
+            var command = new DeclineLoanCommand
+            {
+                UserId = userId,
+                LoanId = loanId
+            };
+            
 
             var result = await _mediator.Send(command);
 
@@ -93,10 +97,13 @@ namespace MeepleHub.Api.Controllers
         }
 
         [HttpPut("loans/{loanId:int}/cancel")]
-        public async Task<ActionResult<CancelLoanResponse>> CancelLoan(int userId, int loanId, CancelLoanCommand command)
+        public async Task<ActionResult<CancelLoanResponse>> CancelLoan([FromRoute] int userId, [FromRoute] int loanId)
         {
-            command.BorrowerId = userId;
-            command.LoanId = loanId;
+            var command = new CancelLoanCommand
+            {
+                BorrowerId = userId,
+                LoanId = loanId
+            };
 
             var result = await _mediator.Send(command);
 
