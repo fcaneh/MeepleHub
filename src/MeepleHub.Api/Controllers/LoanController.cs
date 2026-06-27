@@ -3,6 +3,7 @@ using MeepleHub.Application.Commands.Loans.AcceptLoan;
 using MeepleHub.Application.Commands.Loans.CancelLoan;
 using MeepleHub.Application.Commands.Loans.CreateLoan;
 using MeepleHub.Application.Commands.Loans.DeclineLoan;
+using MeepleHub.Application.Commands.Loans.ReturnLoan;
 using MeepleHub.Application.Queries.Loans.GetUserGameLoans;
 using MeepleHub.Application.Queries.Loans.GetUserLoans;
 using Microsoft.AspNetCore.Mvc;
@@ -88,6 +89,22 @@ namespace MeepleHub.Api.Controllers
             var result = await _mediator.Send(command);
 
             if (result.Cancelled == false) return NotFound(result);
+
+            return Ok(result);
+        }
+
+        [HttpPut("loans/{loanId:int}/return")]
+        public async Task<ActionResult<ReturnLoanResponse>> ReturnLoan(int userId, int loanId, ReturnLoanCommand command)
+        {
+            command.UserId = userId;
+            command.LoanId = loanId;
+
+            var result = await _mediator.Send(command);
+
+            if (!result.Returned)
+            {
+                return NotFound(result);
+            }
 
             return Ok(result);
         }
