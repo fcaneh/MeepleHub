@@ -23,6 +23,8 @@ namespace MeepleHub.Infrastructure.Persistence
         public DbSet<GameAlias> GameAliases => Set<GameAlias>();
         public DbSet<GameExternalReference> GameExternalReferences => Set<GameExternalReference>();
         public DbSet<Loan> Loans => Set<Loan>();
+        public DbSet<Trade> Trades => Set<Trade>();
+        public DbSet<TradeItem> TradeItems => Set<TradeItem>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,6 +43,13 @@ namespace MeepleHub.Infrastructure.Persistence
             modelBuilder.Entity<Loan>().HasOne(loan => loan.UserGame).WithMany(userGame => userGame.Loans).HasForeignKey(loan => loan.UserGameId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Loan>().HasOne(loan => loan.BorrowerUser).WithMany(user => user.BorrowedLoans).HasForeignKey(loan => loan.BorrowerUserId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Loan>().Property(loan => loan.Notes).HasMaxLength(1000);
+            modelBuilder.Entity<Trade>().HasOne<User>().WithMany().HasForeignKey(trade => trade.RequesterUserId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Trade>().HasOne<User>().WithMany().HasForeignKey(trade => trade.ReceiverUserId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Trade>().Property(trade => trade.Notes).HasMaxLength(1000);
+            modelBuilder.Entity<TradeItem>().HasOne(item => item.Trade).WithMany(trade => trade.TradeItems).HasForeignKey(item => item.TradeId).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<TradeItem>().HasOne(item => item.UserGame).WithMany().HasForeignKey(item => item.UserGameId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TradeItem>().HasOne(item => item.FromUser).WithMany().HasForeignKey(item => item.FromUserId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TradeItem>().HasOne(item => item.ToUser).WithMany().HasForeignKey(item => item.ToUserId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
