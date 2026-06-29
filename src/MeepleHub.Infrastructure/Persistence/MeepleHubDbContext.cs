@@ -48,8 +48,7 @@ namespace MeepleHub.Infrastructure.Persistence
             modelBuilder.Entity<Trade>().Property(trade => trade.Notes).HasMaxLength(1000);
             modelBuilder.Entity<TradeItem>().HasOne(item => item.Trade).WithMany(trade => trade.TradeItems).HasForeignKey(item => item.TradeId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<TradeItem>().HasOne(item => item.UserGame).WithMany().HasForeignKey(item => item.UserGameId).OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<TradeItem>().HasOne(item => item.FromUser).WithMany().HasForeignKey(item => item.FromUserId).OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<TradeItem>().HasOne(item => item.ToUser).WithMany().HasForeignKey(item => item.ToUserId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TradeItem>().HasOne(item => item.RequestedByUser).WithMany().HasForeignKey(item => item.RequestedByUserId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
