@@ -1,4 +1,9 @@
+using FluentValidation;
+using MediatR;
+using MeepleHub.Api.MiddleWare;
 using MeepleHub.Application;
+using MeepleHub.Application.Commands.Games.CreateGame;
+using MeepleHub.Application.Common.Behaviors;
 using MeepleHub.Application.ExternalInterfaces;
 using MeepleHub.Application.Queries.Games.GetGames;
 using MeepleHub.Application.Queries.Users.GetUsers;
@@ -26,6 +31,7 @@ builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
 builder.Services.AddScoped<IGameRepository, GameRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserGameRepository, UserGameRepository>();
+builder.Services.AddScoped<ILoanRepository, LoanRepository>();
 
 // 5. Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -37,13 +43,17 @@ builder.Services.AddSwaggerGen(c =>
 // 6. Contrôleurs
 builder.Services.AddControllers();
 
-// 7.Services
+// 7. Services
+builder.Services.AddValidatorsFromAssemblyContaining<CreateGameCommandValidator>();
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
 builder.Services.AddHttpClient<IBggClient, BggClient>(client =>
 {
     client.DefaultRequestHeaders.UserAgent.ParseAdd("MeepleHub/0.1");
 });
 
 var app = builder.Build();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Seed la base
 using (var scope = app.Services.CreateScope())

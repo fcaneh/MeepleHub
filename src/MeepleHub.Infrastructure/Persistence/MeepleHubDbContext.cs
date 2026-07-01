@@ -22,6 +22,7 @@ namespace MeepleHub.Infrastructure.Persistence
         public DbSet<Mechanic> Mechanics => Set<Mechanic>();
         public DbSet<GameAlias> GameAliases => Set<GameAlias>();
         public DbSet<GameExternalReference> GameExternalReferences => Set<GameExternalReference>();
+        public DbSet<Loan> Loans => Set<Loan>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,6 +38,9 @@ namespace MeepleHub.Infrastructure.Persistence
             modelBuilder.Entity<GameExternalReference>().Property(reference => reference.ExternalId).HasMaxLength(100);
             modelBuilder.Entity<GameAlias>().Property(alias => alias.LanguageCode).HasMaxLength(10);
             modelBuilder.Entity<GameAlias>().Property(alias => alias.Name).HasMaxLength(300);
+            modelBuilder.Entity<Loan>().HasOne(loan => loan.UserGame).WithMany(userGame => userGame.Loans).HasForeignKey(loan => loan.UserGameId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Loan>().HasOne(loan => loan.BorrowerUser).WithMany(user => user.BorrowedLoans).HasForeignKey(loan => loan.BorrowerUserId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Loan>().Property(loan => loan.Notes).HasMaxLength(1000);
         }
     }
 }

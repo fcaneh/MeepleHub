@@ -15,16 +15,11 @@ namespace MeepleHub.Application.Commands.UserGames.DeleteUserGame
 
         public async Task<DeleteUserGameResponse> Handle(DeleteUserGameCommand request, CancellationToken cancellationToken)
         {
-            var userGame = await _userGameRepository.GetByIdAsync(request.Id);
+            var userGame = await _userGameRepository.GetByIdAsync(request.UserId, request.Id);
 
             if (userGame is null) 
             { 
                 return new DeleteUserGameResponse { Deleted = false }; 
-            }
-
-            if (userGame.UserId != request.UserId)
-            {
-                return new DeleteUserGameResponse { Deleted = false };
             }
 
             _userGameRepository.Delete(userGame);  

@@ -5,6 +5,7 @@ using MeepleHub.Application.Commands.Games.UpdateGame;
 using MeepleHub.Application.Queries.Games.GameSearch;
 using MeepleHub.Application.Queries.Games.GetGameById;
 using MeepleHub.Application.Queries.Games.GetGames;
+using MeepleHub.Api.Requests.Games;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeepleHub.Api.Controllers
@@ -29,7 +30,7 @@ namespace MeepleHub.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<GetGameByIdResponse>> GetGameById(int id)
+        public async Task<ActionResult<GetGameByIdResponse>> GetGameById([FromRoute] int id)
         {
             var query = new GetGameByIdQuery { Id = id };
             var result = await _mediator.Send(query); 
@@ -41,14 +42,30 @@ namespace MeepleHub.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CreateGameResponse>> CreateGame(CreateGameCommand command)
+        public async Task<ActionResult<CreateGameResponse>> CreateGame([FromBody] CreateGameRequest request)
         {
+            var command = new CreateGameCommand
+            {
+                Name = request.Name,
+                RetailPrice = request.RetailPrice,
+                ImageUrl = request.ImageUrl,
+                PublisherId = request.PublisherId,
+                Description = request.Description,
+                PublishedYear = request.PublishedYear,
+                MinPlayers = request.MinPlayers,
+                MaxPlayers = request.MaxPlayers,
+                MinPlayTime = request.MinPlayTime,
+                MaxPlayTime = request.MaxPlayTime,
+                MinAge = request.MinAge,
+                Complexity = request.Complexity
+            };
+
             var result = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetGameById), new {id = result.Game.Id}, result);
+            return CreatedAtAction(nameof(GetGameById), new { id = result.Game.Id }, result);
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteGame(int id)
+        public async Task<IActionResult> DeleteGame([FromRoute] int id)
         {
             var result = await _mediator.Send(new DeleteGameCommand {Id = id});
 
@@ -58,9 +75,25 @@ namespace MeepleHub.Api.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<UpdateGameResponse>> UpdateGame(int id, UpdateGameCommand command)
+        public async Task<ActionResult<UpdateGameResponse>> UpdateGame([FromRoute] int id, [FromBody] UpdateGameRequest request)
         {
-            command.Id = id;
+            var command = new UpdateGameCommand
+            {
+                Id = id,
+                Name = request.Name,
+                RetailPrice = request.RetailPrice,
+                ImageUrl = request.ImageUrl,
+                PublisherId = request.PublisherId,
+                Description = request.Description,
+                PublishedYear = request.PublishedYear,
+                MinPlayers = request.MinPlayers,
+                MaxPlayers = request.MaxPlayers,
+                MinPlayTime = request.MinPlayTime,
+                MaxPlayTime = request.MaxPlayTime,
+                MinAge = request.MinAge,
+                Complexity = request.Complexity
+            };
+
             var result = await _mediator.Send(command);
 
             if (result.NameAlreadyExists) return Conflict(result);
