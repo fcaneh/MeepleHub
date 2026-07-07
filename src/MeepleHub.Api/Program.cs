@@ -13,6 +13,7 @@ using MeepleHub.Infrastructure.Persistence;
 using MeepleHub.Infrastructure.Persistence.Seed;
 using MeepleHub.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,8 @@ builder.Services.AddScoped<IGameRepository, GameRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserGameRepository, UserGameRepository>();
 builder.Services.AddScoped<ILoanRepository, LoanRepository>();
+builder.Services.AddScoped<IBggGameParser, BggGameParser>();
+builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
 
 // 5. Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -49,7 +52,12 @@ builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBeh
 
 builder.Services.AddHttpClient<IBggClient, BggClient>(client =>
 {
+    var bggToken = builder.Configuration["Bgg:Token"];
     client.DefaultRequestHeaders.UserAgent.ParseAdd("MeepleHub/0.1");
+    if(!string.IsNullOrEmpty(bggToken))
+    {
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bggToken);
+    }
 });
 
 var app = builder.Build();
