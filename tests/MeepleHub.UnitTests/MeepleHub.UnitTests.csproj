@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\MeepleHub.Domain\MeepleHub.Domain.csproj" />
     <ProjectReference Include="..\..\src\MeepleHub.Application\MeepleHub.Application.csproj" />
+    <ProjectReference Include="..\..\src\MeepleHub.Infrastructure\MeepleHub.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

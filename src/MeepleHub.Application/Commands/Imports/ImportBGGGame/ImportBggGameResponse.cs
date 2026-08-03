@@ -7,8 +7,9 @@ namespace MeepleHub.Application.Commands.Imports.ImportBGGGame
 {
     public class ImportBggGameResponse
     {
-        public GameDto Game { get; set; } = null!;
+        public GameDto? Game { get; set; }
         public bool AlreadyExists { get; set; }
         public bool Imported { get; set; }
+        public string? ErrorMessage { get; set; }
     }
 }

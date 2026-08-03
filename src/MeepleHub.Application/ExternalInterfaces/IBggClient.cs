@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MeepleHub.Application.ExternalModels.Bgg;
 
 namespace MeepleHub.Application.ExternalInterfaces
 {
     public interface IBggClient
     {
-        Task<string?> GetThingXmlByIdAsync(int bggId);
+        Task<BggClientResult> GetThingXmlByIdAsync(int bggId);
+
     }
 }

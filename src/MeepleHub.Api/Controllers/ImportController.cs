@@ -23,7 +23,13 @@ namespace MeepleHub.Api.Controllers
             var command = new ImportBggGameCommand { BggId = bggId };
             var result = await _mediator.Send(command);
 
+            if (!string.IsNullOrWhiteSpace(result.ErrorMessage))
+            {
+                return BadRequest(result);
+            }
+
             return Ok(result);
         }
+
     }
 }

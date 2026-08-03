@@ -40,23 +40,34 @@ namespace MeepleHub.Application.Commands.Imports.ImportBGGGame
                 };
             }
 
-            var xml = await _bggClient.GetThingXmlByIdAsync(request.BggId);
+            var bggClientResponse = await _bggClient.GetThingXmlByIdAsync(request.BggId);
 
-            if (xml is null)
+            if (!bggClientResponse.Success)
             {
                 return new ImportBggGameResponse
                 {
-                    Imported = false
+                    Imported = false,
+                    ErrorMessage = bggClientResponse.ErrorMessage ?? "Unable to fetch BGG data."
                 };
             }
 
-            var gameData = _bggGameParser.ParseThingXml(xml);
+            if (string.IsNullOrWhiteSpace(bggClientResponse.Xml))
+            {
+                return new ImportBggGameResponse
+                {
+                    Imported = false,
+                    ErrorMessage = "BGG returned an empty response."
+                };
+            }
+
+            var gameData = _bggGameParser.ParseThingXml(bggClientResponse.Xml);
 
             if (gameData is null)
             {
                 return new ImportBggGameResponse
                 {
-                    Imported = false
+                    Imported = false,
+                    ErrorMessage = "BGG data could not be parsed into a game."
                 };
             }
 
