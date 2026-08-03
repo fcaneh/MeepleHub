@@ -38,6 +38,19 @@ namespace MeepleHub.Infrastructure.Repositories
             return await _context.Games.AnyAsync(game => game.Id != excludedGameId && game.Name.ToLower() == normalizedName);
         }
 
+        public async Task<Game?> FindByExternalReferenceAsync(string source, string externalId)
+        {
+            var normalizedSource = source.Trim().ToLower();
+            var normalizeExternalId = externalId.Trim();
+            
+            return await _context.Games
+                .FirstOrDefaultAsync(game => 
+                    game.ExternalReferences != null && 
+                    game.ExternalReferences.Any(reference => reference.Source.ToLower() == normalizedSource &&
+                    reference.ExternalId == normalizeExternalId));
+
+        }
+
         public async Task<IEnumerable<Game>> GetAllAsync()
         {
             return await _context.Games.ToListAsync();
