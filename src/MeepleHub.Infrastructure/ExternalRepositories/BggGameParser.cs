@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using MeepleHub.Application.ExternalInterfaces;
 using MeepleHub.Application.ExternalModels.Bgg;
+using MeepleHub.Application.DTOs;
 using System.Globalization;
 using System.Xml.Linq;
 
@@ -10,7 +11,7 @@ namespace MeepleHub.Infrastructure.ExternalRepositories
 {
     public class BggGameParser : IBggGameParser
     {
-    
+
         public BggGameImportData? ParseThingXml(string xml)
         {
             if (string.IsNullOrWhiteSpace(xml))
@@ -28,7 +29,7 @@ namespace MeepleHub.Infrastructure.ExternalRepositories
 
             var name = item.Elements("name").FirstOrDefault(element => element.Attribute("type")?.Value == "primary")?.Attribute("value")?.Value;
 
-            if(string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 return null;
             }
@@ -48,6 +49,35 @@ namespace MeepleHub.Infrastructure.ExternalRepositories
                 Complexity = ParseComplexity(item),
                 Aliases = item.Elements("name").Where(element => element.Attribute("type")?.Value == "alternate").Select(element => element.Attribute("value")?.Value).Where(value => !string.IsNullOrWhiteSpace(value)).Select(value => value!).Distinct().ToList()
             };
+        }
+
+        public IEnumerable<BggSearchResultDto> ParseSearchXml(string xml)
+        {
+            if (string.IsNullOrWhiteSpace(xml))
+            {
+                return Enumerable.Empty<BggSearchResultDto>();
+            }
+            var document = XDocument.Parse(xml);
+            var items = document.Root?.Elements("item");
+
+            if (items is null)
+            {
+                return Enumerable.Empty<BggSearchResultDto>();
+            }
+
+            var games = items.Select(item => new BggSearchResultDto
+            {
+                BggId = int.TryParse(item.Attribute("id")?.Value, out var id) ? id : 0,
+                Name = item.Elements("name")
+                    .FirstOrDefault(element => element.Attribute("type")?.Value == "primary")
+                    ?.Attribute("value")
+                    ?.Value ?? string.Empty,
+                PublishedYear = ParseNullableInt(item, "yearpublished")
+            })
+            .Where(game => game.BggId > 0 && !string.IsNullOrWhiteSpace(game.Name))
+            .ToList();
+
+            return games;
         }
 
 

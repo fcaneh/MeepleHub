@@ -36,5 +36,30 @@ namespace MeepleHub.Infrastructure.ExternalRepositories
                 Xml = await response.Content.ReadAsStringAsync()
             };
         }
+
+        public async Task<BggClientResult> SearchGamesXmlAsync(string query)
+        {
+            var encodedQuery = Uri.EscapeDataString(query);
+            var url = $"https://boardgamegeek.com/xmlapi2/search?query={encodedQuery}&type=boardgame";
+
+            var response = await _httpClient.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return new BggClientResult
+                {
+                    Success = false,
+                    StatusCode = (int)response.StatusCode,
+                    ErrorMessage = $"Failed to search games from BGG API. Status code: {response.StatusCode}"
+                };
+            }
+
+            return new BggClientResult
+            {
+                Success = true,
+                StatusCode = (int)response.StatusCode,
+                Xml = await response.Content.ReadAsStringAsync()
+            };
+        }
     }
 }
