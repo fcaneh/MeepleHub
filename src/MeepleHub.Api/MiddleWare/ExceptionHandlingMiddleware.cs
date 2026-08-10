@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using MeepleHub.Application.Common.Exceptions;
 
 namespace MeepleHub.Api.MiddleWare
 {
@@ -26,6 +27,11 @@ namespace MeepleHub.Api.MiddleWare
             {
                 await HandleValidationExceptionAsync(context, ex);
             }
+            catch (NotFoundException ex)
+            {
+                await HandleNotFoundExceptionAsync(context, ex);
+            }
+
             catch (InvalidOperationException ex)
             {
                 await HandleConflictExceptionAsync(context, ex);
@@ -36,6 +42,21 @@ namespace MeepleHub.Api.MiddleWare
 
                 await HandleGenericExceptionAsync(context);
             }
+        }
+
+        private static async Task HandleNotFoundExceptionAsync(HttpContext context, NotFoundException exception)
+        {
+            context.Response.StatusCode = StatusCodes.Status404NotFound;
+            context.Response.ContentType = "application/problem+json";
+
+            var response = new ProblemDetails
+            {
+                Status = StatusCodes.Status404NotFound,
+                Title = "Resource not found",
+                Detail = exception.Message
+            };
+
+            await context.Response.WriteAsync(JsonSerializer.Serialize(response));
         }
 
         private static async Task HandleValidationExceptionAsync(HttpContext context, ValidationException exception)
