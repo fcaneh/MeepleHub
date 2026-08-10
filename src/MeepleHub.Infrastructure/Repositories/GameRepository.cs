@@ -16,6 +16,41 @@ namespace MeepleHub.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task AddAsync(Game game)
+        {
+            await _context.Games.AddAsync(game);
+        }
+
+        public void Delete(Game game)
+        {
+            _context.Games.Remove(game);
+        }
+
+        public async Task<bool> ExistsByNameAsync(string name)
+        {
+            var normalizedName = name.Trim().ToLower();
+            return await _context.Games.AnyAsync(game => game.Name.ToLower() == normalizedName);
+        }
+
+        public async Task<bool> ExistsByNameAsync(string name, int excludedGameId)
+        {
+            var normalizedName = name.Trim().ToLower();
+            return await _context.Games.AnyAsync(game => game.Id != excludedGameId && game.Name.ToLower() == normalizedName);
+        }
+
+        public async Task<Game?> FindByExternalReferenceAsync(string source, string externalId)
+        {
+            var normalizedSource = source.Trim().ToLower();
+            var normalizeExternalId = externalId.Trim();
+            
+            return await _context.Games
+                .FirstOrDefaultAsync(game => 
+                    game.ExternalReferences != null && 
+                    game.ExternalReferences.Any(reference => reference.Source.ToLower() == normalizedSource &&
+                    reference.ExternalId == normalizeExternalId));
+
+        }
+
         public async Task<IEnumerable<Game>> GetAllAsync()
         {
             return await _context.Games.ToListAsync();
@@ -24,6 +59,22 @@ namespace MeepleHub.Infrastructure.Repositories
         public async Task<Game?> GetByIdAsync(int id)
         {
             return await _context.Games.FindAsync(id);
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Game>> SearchAsync(string query)
+        {
+            var normalizedQuery = query.Trim().ToLower();
+
+            return await _context.Games.Where(game => 
+                game.Name.ToLower().Contains(normalizedQuery) || 
+                game.Aliases != null 
+                    && game.Aliases.Any(alias => alias.Name.ToLower().Contains(normalizedQuery)))
+                .ToListAsync();
         }
     }
 }

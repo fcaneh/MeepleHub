@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\MeepleHub.Application\MeepleHub.Application.csproj" />
     <ProjectReference Include="..\MeepleHub.Domain\MeepleHub.Domain.csproj" />
   </ItemGroup>
 

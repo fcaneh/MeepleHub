@@ -1,10 +1,19 @@
+using FluentValidation;
+using MediatR;
+using MeepleHub.Api.MiddleWare;
 using MeepleHub.Application;
+using MeepleHub.Application.Commands.Games.CreateGame;
+using MeepleHub.Application.Common.Behaviors;
+using MeepleHub.Application.ExternalInterfaces;
 using MeepleHub.Application.Queries.Games.GetGames;
+using MeepleHub.Application.Queries.Users.GetUsers;
 using MeepleHub.Domain.Interfaces;
+using MeepleHub.Infrastructure.ExternalRepositories;
 using MeepleHub.Infrastructure.Persistence;
 using MeepleHub.Infrastructure.Persistence.Seed;
 using MeepleHub.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,14 +22,19 @@ builder.Services.AddDbContext<MeepleHubDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // 2. MediatR
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(GetGamesQuery).Assembly));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetGamesQuery).Assembly));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetUsersQuery).Assembly));
 
 // 3. AutoMapper 
 builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
 
 // 4. Repositories
 builder.Services.AddScoped<IGameRepository, GameRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserGameRepository, UserGameRepository>();
+builder.Services.AddScoped<ILoanRepository, LoanRepository>();
+builder.Services.AddScoped<IBggGameParser, BggGameParser>();
+builder.Services.AddScoped<IPublisherRepository, PublisherRepository>();
 
 // 5. Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -32,7 +46,22 @@ builder.Services.AddSwaggerGen(c =>
 // 6. Contrôleurs
 builder.Services.AddControllers();
 
+// 7. Services
+builder.Services.AddValidatorsFromAssemblyContaining<CreateGameCommandValidator>();
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+builder.Services.AddHttpClient<IBggClient, BggClient>(client =>
+{
+    var bggToken = builder.Configuration["Bgg:Token"];
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("MeepleHub/0.1");
+    if(!string.IsNullOrEmpty(bggToken))
+    {
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bggToken);
+    }
+});
+
 var app = builder.Build();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Seed la base
 using (var scope = app.Services.CreateScope())

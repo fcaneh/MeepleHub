@@ -20,19 +20,27 @@ namespace MeepleHub.Infrastructure.Persistence
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<Designer> Designers => Set<Designer>();
         public DbSet<Mechanic> Mechanics => Set<Mechanic>();
+        public DbSet<GameAlias> GameAliases => Set<GameAlias>();
+        public DbSet<GameExternalReference> GameExternalReferences => Set<GameExternalReference>();
+        public DbSet<Loan> Loans => Set<Loan>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Game>().Property(game => game.RetailPrice).HasPrecision(10, 2);
-            modelBuilder.Entity<UserGame>().HasOne(ug => ug.User).WithMany(u => u.UserGames).HasForeignKey(ug => ug.UserId);
-
-            modelBuilder.Entity<UserGame>().HasOne(ug => ug.Game).WithMany(g => g.UserGames).HasForeignKey(ug => ug.GameId);
-
-            modelBuilder.Entity<UserGame>().Property(ug => ug.PurchasePrice).HasPrecision(10, 2);
-
-            modelBuilder.Entity<UserGame>().Property(ug => ug.SellingPrice).HasPrecision(10, 2);
-
+            modelBuilder.Entity<Game>().HasIndex(game => game.Name).IsUnique();
             modelBuilder.Entity<Game>().Property(game => game.Complexity).HasPrecision(3, 2);
+            modelBuilder.Entity<UserGame>().HasOne(ug => ug.User).WithMany(u => u.UserGames).HasForeignKey(ug => ug.UserId);
+            modelBuilder.Entity<UserGame>().HasOne(ug => ug.Game).WithMany(g => g.UserGames).HasForeignKey(ug => ug.GameId);
+            modelBuilder.Entity<UserGame>().Property(ug => ug.PurchasePrice).HasPrecision(10, 2);
+            modelBuilder.Entity<UserGame>().Property(ug => ug.SellingPrice).HasPrecision(10, 2);
+            modelBuilder.Entity<GameExternalReference>().HasIndex(reference => new { reference.Source, reference.ExternalId }).IsUnique();
+            modelBuilder.Entity<GameExternalReference>().Property(reference => reference.Source).HasMaxLength(50);
+            modelBuilder.Entity<GameExternalReference>().Property(reference => reference.ExternalId).HasMaxLength(100);
+            modelBuilder.Entity<GameAlias>().Property(alias => alias.LanguageCode).HasMaxLength(10);
+            modelBuilder.Entity<GameAlias>().Property(alias => alias.Name).HasMaxLength(300);
+            modelBuilder.Entity<Loan>().HasOne(loan => loan.UserGame).WithMany(userGame => userGame.Loans).HasForeignKey(loan => loan.UserGameId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Loan>().HasOne(loan => loan.BorrowerUser).WithMany(user => user.BorrowedLoans).HasForeignKey(loan => loan.BorrowerUserId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Loan>().Property(loan => loan.Notes).HasMaxLength(1000);
         }
     }
 }
