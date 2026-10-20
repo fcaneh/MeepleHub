@@ -37,5 +37,8 @@ namespace MeepleHub.Domain.Entities
         public List<UserGame>? UserGames { get; set; } = new();
         public List<GameAlias>? Aliases { get; set; } = new();
         public List<GameExternalReference>? ExternalReferences { get; set; } = new();
+        public List<Category> Categories { get; set; } = new();
+        public List<Mechanic> Mechanics { get; set; } = new();
+        public List<Designer> Designers { get; set; } = new();
     }
 }

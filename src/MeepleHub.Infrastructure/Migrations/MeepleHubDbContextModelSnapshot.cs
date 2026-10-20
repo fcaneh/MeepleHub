@@ -22,6 +22,51 @@ namespace MeepleHub.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CategoryGame", b =>
+                {
+                    b.Property<int>("CategoriesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GamesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CategoriesId", "GamesId");
+
+                    b.HasIndex("GamesId");
+
+                    b.ToTable("GameCategories", (string)null);
+                });
+
+            modelBuilder.Entity("DesignerGame", b =>
+                {
+                    b.Property<int>("DesignersId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GamesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DesignersId", "GamesId");
+
+                    b.HasIndex("GamesId");
+
+                    b.ToTable("GameDesigners", (string)null);
+                });
+
+            modelBuilder.Entity("GameMechanic", b =>
+                {
+                    b.Property<int>("GamesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MechanicsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GamesId", "MechanicsId");
+
+                    b.HasIndex("MechanicsId");
+
+                    b.ToTable("GameMechanics", (string)null);
+                });
+
             modelBuilder.Entity("MeepleHub.Domain.Entities.Artist", b =>
                 {
                     b.Property<int>("Id")
@@ -326,6 +371,51 @@ namespace MeepleHub.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserGames");
+                });
+
+            modelBuilder.Entity("CategoryGame", b =>
+                {
+                    b.HasOne("MeepleHub.Domain.Entities.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MeepleHub.Domain.Entities.Game", null)
+                        .WithMany()
+                        .HasForeignKey("GamesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DesignerGame", b =>
+                {
+                    b.HasOne("MeepleHub.Domain.Entities.Designer", null)
+                        .WithMany()
+                        .HasForeignKey("DesignersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MeepleHub.Domain.Entities.Game", null)
+                        .WithMany()
+                        .HasForeignKey("GamesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GameMechanic", b =>
+                {
+                    b.HasOne("MeepleHub.Domain.Entities.Game", null)
+                        .WithMany()
+                        .HasForeignKey("GamesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MeepleHub.Domain.Entities.Mechanic", null)
+                        .WithMany()
+                        .HasForeignKey("MechanicsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MeepleHub.Domain.Entities.Game", b =>

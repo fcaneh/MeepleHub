@@ -22,12 +22,8 @@ namespace MeepleHub.Application.Queries.Games.GetGames
 
         public async Task<GetGamesResponse> Handle(GetGamesQuery request, CancellationToken cancellationToken)
         {
-            var games = await _gameRepository.GetAllAsync();
-
-            if (!string.IsNullOrEmpty(request.NameFilter))
-            {
-                games = games.Where(game => game.Name.Contains(request.NameFilter));
-            }
+            var games = await _gameRepository.GetFilterAsync(nameFilter: request.NameFilter, categoryIds: request.CategoryIds, mechanicIds: request.MechanicIds, publisherIds: request.PublisherIds, designerIds: request.DesignerIds, minPlayers: request.MinPlayersFilter, maxPlayers: request.MaxPlayersFilter, numberPlayers: request.NumberPlayersFilter, youngestPlayerAge: request.YoungestPlayerAge);
+            
             return new GetGamesResponse
             {
                 Games = _mapper.Map<IEnumerable<GameDto>>(games)

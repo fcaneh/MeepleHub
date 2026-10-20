@@ -29,6 +29,9 @@ namespace MeepleHub.Infrastructure.Persistence
             modelBuilder.Entity<Game>().Property(game => game.RetailPrice).HasPrecision(10, 2);
             modelBuilder.Entity<Game>().HasIndex(game => game.Name).IsUnique();
             modelBuilder.Entity<Game>().Property(game => game.Complexity).HasPrecision(3, 2);
+            modelBuilder.Entity<Game>().HasMany(game => game.Categories).WithMany(category => category.Games).UsingEntity(j => j.ToTable("GameCategories"));
+            modelBuilder.Entity<Game>().HasMany(game => game.Mechanics).WithMany(mechanic => mechanic.Games).UsingEntity(j => j.ToTable("GameMechanics"));
+            modelBuilder.Entity<Game>().HasMany(game => game.Designers).WithMany(designer => designer.Games).UsingEntity(j => j.ToTable("GameDesigners"));
             modelBuilder.Entity<UserGame>().HasOne(ug => ug.User).WithMany(u => u.UserGames).HasForeignKey(ug => ug.UserId);
             modelBuilder.Entity<UserGame>().HasOne(ug => ug.Game).WithMany(g => g.UserGames).HasForeignKey(ug => ug.GameId);
             modelBuilder.Entity<UserGame>().Property(ug => ug.PurchasePrice).HasPrecision(10, 2);

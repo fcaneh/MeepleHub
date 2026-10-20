@@ -18,5 +18,6 @@ namespace MeepleHub.Domain.Interfaces
         Task<IEnumerable<Game>> SearchAsync(string query);
 
         Task<Game?> FindByExternalReferenceAsync(string source, string externalId);
+        Task<IEnumerable<Game>> GetFilterAsync(string? nameFilter = null, IEnumerable<int>? categoryIds = null, IEnumerable<int>? mechanicIds = null, IEnumerable<int>? publisherIds = null, IEnumerable<int>? designerIds = null, int? minPlayers = null, int? maxPlayers = null, int? numberPlayers = null, int? youngestPlayerAge = null);
     }
 }

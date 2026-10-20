@@ -22,9 +22,28 @@ namespace MeepleHub.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<GetGamesResponse>> GetGames([FromQuery] string? nameFilter = null)
+        public async Task<ActionResult<GetGamesResponse>> GetGames([FromQuery] string? nameFilter = null, 
+                                                                   [FromQuery] List<int>? categoryIds = null,
+                                                                   [FromQuery] List<int>? mechanicsIds = null,
+                                                                   [FromQuery] List<int>? publishersIds = null,
+                                                                   [FromQuery] List<int>? designersIds = null,
+                                                                   [FromQuery] int? minPlayersFilter = null, 
+                                                                   [FromQuery] int? maxPlayersFilter = null,
+                                                                   [FromQuery] int? numberPlayersFilter = null, 
+                                                                   [FromQuery] int? youngestPlayerAgeFilter = null)
+
         {
-            var query = new GetGamesQuery { NameFilter = nameFilter};
+            var query = new GetGamesQuery { 
+                NameFilter = nameFilter,
+                CategoryIds = categoryIds,
+                MechanicIds = mechanicsIds,
+                PublisherIds = publishersIds,
+                DesignerIds = designersIds,
+                MinPlayersFilter = minPlayersFilter,
+                MaxPlayersFilter = maxPlayersFilter,
+                NumberPlayersFilter = numberPlayersFilter,
+                YoungestPlayerAge = youngestPlayerAgeFilter,
+            };
             var result = await _mediator.Send(query);
             return Ok(result);
         }
